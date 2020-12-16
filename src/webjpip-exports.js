@@ -12,3 +12,6 @@ module.exports.Internals = {
     jpipRuntimeFactory: require('jpip-runtime-factory.js'),
     jGlobals: jGlobals
 };
+
+// Demo attempt
+module.exports.demo = require('jpipDemo.js');

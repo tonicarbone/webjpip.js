@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>JPIP Demo</title>
+  </head>
+  <body>
+    <div style="width: 100%">
+      Jpip URL:
+      <input
+        style="width: 80%"
+        type="text"
+        id="jpipUrlTxt"
+        value="URL"
+        />
+      <input type="button" onclick="loadImage()" value="Load image" />
+    </div>
+    
+    <div>
+      <a href="javascript:image.close()" id="closeImageLink"></a><br>
+      <a href="javascript:loadAllTiles()" id="loadAllTilesLink"></a>
+    </div>
+    
+    <div id="status">Initializing...</div>
+    <br><br>
+    
+    <div style="color: red" id="errorDiv"></div>
+    
+    <div>
+      <br>
+      Number of resolution levels to cut:
+      <input type="text" value="0" id="numResolutionLevelsToCutTxt" />
+      /
+      maximum: <span id="maxNumResolutionLevelsSpan"></span>
+
+      <br>
+      Maximum number of quality layers:
+      <input type="text" value="0" id="maxNumQualityLayersTxt" />
+
+      <br>
+      <input type="checkbox" value="false" id="enableProgressiveChk" />
+      Enable progressive rendering
+      
+      <br>
+      <br>
+    </div>
+    
+    <div id="tilesViewer"></div>
+    
+    <div id="codestreamBytesDiv"></div>
+    
+    <script src="../webjpip.dev.debug.js"></script>
+
+    <!-- <script src="jpxToCanvas.js"></script>
+    <script src="jpipcodestreamclient_ca87c73.js"></script>
+    <script src="jpipDemo.js"></script> -->
+  </body>
+</html>
