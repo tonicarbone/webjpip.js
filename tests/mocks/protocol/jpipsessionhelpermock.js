@@ -5,6 +5,7 @@ function JpipSessionHelperMock() {
     
     var isReady = false;
     
+    // Add JpipSessionHelper functions to mock object
     mock.addFunction(
         'setStatusCallback',
         ['statusCallback'],

@@ -1,5 +1,6 @@
 'use strict';
 
+// Deals with some bitstream coding
 module.exports = (function JpipCodingPassesNumberParserClosure() {
     // Table B.4 in part 1 of the Jpeg2000 standard shows 7 cases
     // of values. The algorithm shown here separates those cases

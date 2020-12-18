@@ -2,6 +2,7 @@
 
 var jGlobals = require('j2k-jpip-globals.js');
 
+// Handle transactions of info?
 module.exports = {
     createTransaction: function createTransaction() {
         // This code is executed a LOT. For optimization, state is represented

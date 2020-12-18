@@ -12,3 +12,5 @@ module.exports.Internals = {
     jpipRuntimeFactory: require('jpip-runtime-factory.js'),
     jGlobals: jGlobals
 };
+
+module.exports.index = require('index.js');

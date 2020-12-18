@@ -5,6 +5,7 @@ JpipSessionMock.dedicatedChannelToReturnForTest = 'Dummy dedicatedChannel';
 function JpipSessionMock(targetId) {
     var mock = new MockHelper(this);
     
+    // Add JpipSession functions to mock object
     mock.addFunction(
         'setStatusCallback', ['statusCallback'], /*allowNotReturnValue=*/true);
     
@@ -26,6 +27,7 @@ function JpipSessionMock(targetId) {
     
     mock.addFunction('stopRequestAsync', /*argNames=*/['request']);
     
+    // Define getter of last call
     mock.defineGetterOfLastCall(
         'statusCallbackForTest', 'setStatusCallback', 'statusCallback');
     

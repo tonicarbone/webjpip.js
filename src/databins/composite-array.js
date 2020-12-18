@@ -2,23 +2,28 @@
 
 var jGlobals = require('j2k-jpip-globals.js');
 
+// 'Composite' array tools
 module.exports = function CompositeArray(offset) {
     var length = 0;
     var internalParts = [];
     
+    // Get length
     this.getLength = function getLength() {
         return length;
     };
 
+    // Get offset
     this.getOffset = function getOffset() {
         return offset;
     };
         
+    // Push sub-array onto internalParts array and correct length
     this.pushSubArray = function pushSubArray(subArray) {
         internalParts.push(subArray);
         length += subArray.length;
     };
     
+    // ??
     this.copyToOtherAtTheEnd = function copyToOtherAtTheEnd(result, minOffset, maxOffset) {
         checkOffsetsToCopy(minOffset, maxOffset);
         
@@ -31,6 +36,7 @@ module.exports = function CompositeArray(offset) {
         }
     };
 
+    // ??
     this.copyToTypedArray = function copyToTypedArray(
         resultArray, resultArrayOffset, minOffset, maxOffset) {
         
@@ -104,6 +110,7 @@ module.exports = function CompositeArray(offset) {
         } while (tryAdvanceIterator(iterator));
     };
     
+    // Verify valid min and max offsets
     function checkOffsetsToCopy(minOffset, maxOffset) {
         if (minOffset === undefined || maxOffset === undefined) {
             throw new jGlobals.jpipExceptions.InternalErrorException(
@@ -123,6 +130,7 @@ module.exports = function CompositeArray(offset) {
         }
     }
     
+    // Get internalParts array iterator
     function getInternalPartsIterator(minOffset, maxOffset) {
         var start = Math.max(offset, minOffset);
 
@@ -215,6 +223,7 @@ module.exports = function CompositeArray(offset) {
         return true;
     }
     
+    // If end of array is reached throw exception
     function ensureNoEndOfArrayReached(currentInternalPartIndex) {
         if (currentInternalPartIndex >= internalParts.length) {
             throw new jGlobals.jpipExceptions.InternalErrorException(

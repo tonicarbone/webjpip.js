@@ -2,6 +2,7 @@
 
 var jGlobals = require('j2k-jpip-globals.js');
 
+// Parse (make sense of) JPIP message header
 var jpipMessageHeaderParser = {
         
     LSB_MASK: 0x1,

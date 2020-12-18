@@ -2,6 +2,15 @@
 
 var jGlobals = require('j2k-jpip-globals.js');
 
+/**
+ * Help JPIP sessions
+ * @param {*} dataRequestUrl 
+ * @param {*} knownTargetId 
+ * @param {*} codestreamStructure 
+ * @param {*} databinsSaver 
+ * @param {object} ajaxHelper - simple-ajax-helper.js object
+ * @returns {object} - jpipSessionHelper
+ */
 module.exports = function JpipSessionHelper(
     dataRequestUrl,
     knownTargetId,
@@ -9,18 +18,19 @@ module.exports = function JpipSessionHelper(
     databinsSaver,
     ajaxHelper) {
     
-    var statusCallback = null;
-    var requestEndedCallback = null;
+    var statusCallback = null; // Status callback function?
+    var requestEndedCallback = null; // Request ended function?
     
-    var channels = [];
-    var firstChannel = null;
+    var channels = []; // Channels
+    var firstChannel = null; // First channel pointer
 
-    var activeRequests = 0;
-    var waitingForConcurrentRequests = [];
+    var activeRequests = 0; // Amount of active requests
+    var waitingForConcurrentRequests = []; // List of requests waiting at the same time
 
-    var isReady = false;
-    var targetId = knownTargetId || '0';
+    var isReady = false; // ? is ready
+    var targetId = knownTargetId || '0'; // Set target ID
     
+    // On exception, 
     this.onException = function onException(exception) {
         onStatusChange(exception);
     };
@@ -54,6 +64,7 @@ module.exports = function JpipSessionHelper(
         return firstChannel;
     };
     
+    // Set status callback
     this.setStatusCallback = function setStatusCallback(statusCallback_) {
         statusCallback = statusCallback_;
     };
@@ -209,11 +220,15 @@ module.exports = function JpipSessionHelper(
         onStatusChange(exception);
     }
     
+    // On status change
     function onStatusChange(exception) {
+        // If exception is undefined, set to null
         if (exception === undefined) {
             exception = null;
         }
         
+        // If status callback function? is no longer null,
+        // run statusCallback() with isReady and exception
         if (statusCallback !== null) {
             statusCallback({
                 isReady: isReady,

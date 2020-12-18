@@ -1,5 +1,6 @@
 'use strict';
 
+// JPEG2000 codestream markers
 module.exports.j2kMarkers = {
     StartOfCodestream: [0xFF, 0x4F], // SOC
     ImageAndTileSize: [0xFF, 0x51], // SIZ
@@ -15,6 +16,7 @@ module.exports.j2kMarkers = {
     Comment: [0xFF, 0x64] // COM
 };
 
+// JPEG2000 offsets
 module.exports.j2kOffsets = {
     MARKER_SIZE: 2,
     LENGTH_FIELD_SIZE: 2,
@@ -24,6 +26,7 @@ module.exports.j2kOffsets = {
 
 };
 
+// JPIP end of response reasons
 module.exports.jpipEndOfResponseReasons = {
     IMAGE_DONE : 1,
     WINDOW_DONE : 2,
@@ -35,6 +38,7 @@ module.exports.jpipEndOfResponseReasons = {
     NON_SPECIFIED : 8
 };
 
+// JPEG2000 exceptions (errors)
 module.exports.j2kExceptions = {
     UnsupportedFeatureException: function(feature, standardSection) {
         this.description = feature;
@@ -70,6 +74,7 @@ module.exports.j2kExceptions = {
     }
 };
 
+// JPIP exceptions (errors)
 module.exports.jpipExceptions = {
     UnsupportedFeatureException: function(feature, standardSection) {
         this.description = feature;
@@ -156,6 +161,7 @@ module.exports.jpipExceptions = {
     }
 };
 
+// Other exceptions
 module.exports.j2kExceptions.UnsupportedFeatureException.Name =
     'j2kExceptions.UnsupportedFeatureException';
 module.exports.j2kExceptions.ParseException.Name =

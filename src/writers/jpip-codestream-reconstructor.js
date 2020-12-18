@@ -2,13 +2,15 @@
 
 var jGlobals = require('j2k-jpip-globals.js');
 
+// Create codestream or header codestream
 module.exports = function JpipCodestreamReconstructor(
     databinsSaver,
     headerModifier,
     qualityLayersCache) {
         
-    var dummyBufferForLengthCalculation = { isDummyBufferForLengthCalculation: true };
+    var dummyBufferForLengthCalculation = { isDummyBufferForLengthCalculation: true }; // What is this?
     
+    // Create codestream
     this.createCodestream = function createCodestream(
         codestreamPart,
         minQuality,
@@ -17,19 +19,22 @@ module.exports = function JpipCodestreamReconstructor(
         return createCodestreamInternal(codestreamPart, minQuality, maxQuality);
     };
     
+    // Create headers codestream
     this.createHeadersCodestream = function createHeadersCodestream(codestreamPart) {
-        var dummyQuality = 1;
+        var dummyQuality = 1; // What is this?
         var isOnlyHeaders = true;
         return createCodestreamInternal(
             codestreamPart, dummyQuality, dummyQuality, isOnlyHeaders);
     };
     
+    // Create codestream skeleton
     function createCodestreamInternal(
         codestreamPart,
         minQuality,
         maxQuality,
         isOnlyHeadersWithoutBitstream) {
 
+        // How long should the codestream be
         var calculatedLength = createCodestreamOrCalculateLength(
             dummyBufferForLengthCalculation,
             codestreamPart,
@@ -41,6 +46,7 @@ module.exports = function JpipCodestreamReconstructor(
             return null;
         }
         
+        // Make array of 80bit unsigned integers, check actual and calculated are same
         var result = new Uint8Array(calculatedLength);
         var actualLength = createCodestreamOrCalculateLength(
             result,
@@ -54,7 +60,7 @@ module.exports = function JpipCodestreamReconstructor(
         } else if (actualLength === null) {
             return null;
         }
-
+        // If actual != calcualated throw exception
         throw new jGlobals.jpipExceptions.InternalErrorException(
             'JpipCodestreamReconstructor: Unmatched actualLength ' + actualLength +
             ' and calculatedLength ' + calculatedLength);

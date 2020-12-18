@@ -40,6 +40,8 @@ function getConfiguration(env) {
                 path.resolve(__dirname, 'src', 'protocol'),
                 path.resolve(__dirname, 'src', 'quality-layers'),
                 path.resolve(__dirname, 'src', 'writers'),
+                path.resolve(__dirname, 'src'), // Demo
+                path.resolve(__dirname, 'node_modules'),
             ]
         },
         module: { rules: [

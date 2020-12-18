@@ -1,13 +1,16 @@
 'use strict';
 
+// Arbritrary tile size
 var tileWidth = 256;
 var tileHeight = 256;
 
+// Initialising html elements
 var statusDiv = document.getElementById('status');
 var tilesViewerDiv = document.getElementById('tilesViewer');
 var codestreamBytesDiv = document.getElementById('codestreamBytesDiv');
 var errorDiv = document.getElementById('errorDiv');
 
+// User inputs
 var numResolutionLevelsToCutTxt = document.getElementById('numResolutionLevelsToCutTxt');
 var maxNumQualityLayersTxt = document.getElementById('maxNumQualityLayersTxt');
 var jpipUrlTxt = document.getElementById('jpipUrlTxt');
@@ -18,25 +21,33 @@ var maxTileYTxt = document.getElementById('maxTileYTxt');
 
 var enableProgressiveChk = document.getElementById('enableProgressiveChk');
 
+// Image elements
 var closeImageLink = document.getElementById('closeImageLink');
 var loadAllTilesLink = document.getElementById('loadAllTilesLink');
 
+// Max resolution levels
 var maxNumResolutionLevelsSpan = document.getElementById('maxNumResolutionLevelsSpan');
 
+// Tiles to be calculated
 var numTilesX = null;
 var numTilesY = null;
 
+// Image variables
 var image = null;
 var codestreamPerTile;
 var isImageReady = false;
 
+// TODO
 function statusCallback(status) {
+	// If exeption display it
 	if (status.exception !== null) {
 		errorDiv.innerHTML = 'Exception occurred: ' + status.exception;
 	} else {
 		errorDiv.innerHTML = '';
 	}
 	
+	// If image is ready return / exit callback,
+	// otherwise disable links and return / exit callback
 	if (isImageReady === status.isReady) {
 		return;
 	}
@@ -47,12 +58,17 @@ function statusCallback(status) {
 		return;
 	}
 
+	// Get sizes
 	var sizeParams = image.getSizesParams();
+
+	// Set sizes calculator
 	var sizesCalculator = new JpipCodestreamSizesCalculator(sizeParams);
 	
+	// Calculate number of tiles
 	numTilesX = Math.ceil(sizesCalculator.getLevelWidth() / tileWidth);
 	numTilesY = Math.ceil(sizesCalculator.getLevelHeight() / tileHeight);
 	
+	// Display image
 	statusDiv.innerHTML = 'Ready.';
 	closeImageLink.innerHTML = 'Close image';
 	loadAllTilesLink.innerHTML = 'Load all tiles';
@@ -63,6 +79,7 @@ function statusCallback(status) {
 	buildHTMLTileStructure();
 }
 
+// Create table to show codestream / image
 function buildHTMLTileStructure() {
 	var tableHTML = '<table border=1><tr><td></td>';
 
@@ -109,6 +126,7 @@ function disableAllLinks() {
 	}
 }
 
+// Display all tiles (loadTile) on all tiles
 function loadAllTiles() {
 	for (var x = 0; x < numTilesX; ++x) {
 		for (var y = 0; y < numTilesY; ++y) {
@@ -117,6 +135,7 @@ function loadAllTiles() {
 	}
 }
 
+// Decode and load tile into html table
 function loadTile(tileX, tileY) {
 	var name = tileX + '_' + tileY;
 	var spanElement = document.getElementById('span' + name);

@@ -2,6 +2,7 @@
 
 var jGlobals = require('j2k-jpip-globals.js');
 
+// 
 module.exports = function JpipCodestreamStructure(
     jpipStructureParser,
     jpipFactory,
@@ -15,11 +16,13 @@ module.exports = function JpipCodestreamStructure(
 
     var cachedTileStructures = [];
     
+    // Get sizes parameters
     this.getSizesParams = function getSizesParams() {
         validateParams();
         return params;
     };
-    
+
+    // Get number of X and Y tiles
     this.getNumTilesX = function getNumTilesX() {
         validateParams();
         
@@ -34,11 +37,13 @@ module.exports = function JpipCodestreamStructure(
         return numTiles;
     };
 
+    // Get number of components
     this.getNumComponents = function() {
         validateParams();
         return params.numComponents;
     };
     
+    // Get image width and height
     this.getImageWidth = function() {
         validateParams();
 
@@ -53,6 +58,7 @@ module.exports = function JpipCodestreamStructure(
         return size;
     };
     
+    // Get level width and height
     this.getLevelWidth = function(level) {
         validateParams();
 
@@ -67,6 +73,7 @@ module.exports = function JpipCodestreamStructure(
         return size;
     };
     
+    // Get tile width and height
     this.getTileWidth = function(level) {
         validateParams();
 
@@ -81,6 +88,7 @@ module.exports = function JpipCodestreamStructure(
         return size;
     };
     
+    // Get first tile offset X and Y
     this.getFirstTileOffsetX = function() {
         validateParams();
 
@@ -95,6 +103,7 @@ module.exports = function JpipCodestreamStructure(
         return offset;
     };
     
+    // Get left or top tile?
     this.getTileLeft = function getTileLeft(
         tileIndex, level) {
         
@@ -127,6 +136,7 @@ module.exports = function JpipCodestreamStructure(
         return tileTop;
     };
     
+    // Get default tile structure?
     this.getDefaultTileStructure = function getDefaultTileStructure() {
         validateParams();
         var result = getDefaultTileStructureInternal({
@@ -137,8 +147,10 @@ module.exports = function JpipCodestreamStructure(
         return result;
     };
     
+    // Get tile structure
     this.getTileStructure = getTileStructure;
 
+    // Tile position to in class index?
     this.tilePositionToInClassIndex = function(tilePosition) {
         validateParams();
         var tilesX = sizesCalculator.getNumTilesX();
@@ -152,6 +164,7 @@ module.exports = function JpipCodestreamStructure(
         return inClassIndex;
     };
 
+    // Tile in class index to position?
     this.tileInClassIndexToPosition = function(inClassIndex) {
         validateParams();
         var tilesX = sizesCalculator.getNumTilesX();
@@ -171,6 +184,7 @@ module.exports = function JpipCodestreamStructure(
         return result;
     };
     
+    // Get tiles from pixels?
     this.getTilesFromPixels = function getTilesFromPixels(
         codestreamPartParams) {
         
@@ -179,6 +193,7 @@ module.exports = function JpipCodestreamStructure(
         return sizesCalculator.getTilesFromPixels(codestreamPartParams);
     };
 
+    // Get size of tiles
     this.getSizeOfTiles = function getSizeOfTiles(tileBounds) {
         validateParams();
         

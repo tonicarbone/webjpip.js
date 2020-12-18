@@ -3,13 +3,14 @@
 var jGlobals = require('j2k-jpip-globals.js');
 
 module.exports = {
+    // Request constructor
     request: function request(
         url,
         callbackForAsynchronousRequest,
         failureCallbackForAsynchronousRequest,
         progressiveRequestQuantBytes) {
         
-        var ajaxResponse = new XMLHttpRequest();
+        var ajaxResponse = new XMLHttpRequest(); // Create XMLHttp request
         var isSynchronous = callbackForAsynchronousRequest === undefined;
 
         var isFinishedRequest = false;

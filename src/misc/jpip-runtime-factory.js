@@ -1,8 +1,9 @@
 'use strict';
-
+// Handles XMLHttp requests and information? transactions
 var simpleAjaxHelper                 = require('simple-ajax-helper.js'                 );
 var mutualExclusiveTransactionHelper = require('mutual-exclusive-transaction-helper.js');
 
+// Handles some (cryptic) bitstream stuff and parses message headers
 var jpipCodingPassesNumberParser = require('jpip-coding-passes-number-parser.js');
 var jpipMessageHeaderParser      = require('jpip-message-header-parser.js'      );
 
