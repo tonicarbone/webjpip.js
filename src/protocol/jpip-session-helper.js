@@ -4,10 +4,10 @@ var jGlobals = require('j2k-jpip-globals.js');
 
 /**
  * Help JPIP sessions
- * @param {*} dataRequestUrl 
- * @param {*} knownTargetId 
- * @param {*} codestreamStructure 
- * @param {*} databinsSaver 
+ * @param {string} dataRequestUrl 
+ * @param {number} knownTargetId 
+ * @param {object} codestreamStructure 
+ * @param {object} databinsSaver 
  * @param {object} ajaxHelper - simple-ajax-helper.js object
  * @returns {object} - jpipSessionHelper
  */
@@ -194,6 +194,7 @@ module.exports = function JpipSessionHelper(
         }
     };
     
+    // Send Ajax request
     this.sendAjax = function sendAjax(
         url,
         callback,
@@ -201,6 +202,7 @@ module.exports = function JpipSessionHelper(
         
         var forkedFailureCallback;
         
+        // Define failure callback function
         if (failureCallback) {
             forkedFailureCallback = function forkFailureCallback(ajaxResponse) {
                 generalFailureCallback(ajaxResponse);

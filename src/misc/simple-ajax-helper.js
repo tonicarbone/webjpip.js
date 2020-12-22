@@ -3,7 +3,13 @@
 var jGlobals = require('j2k-jpip-globals.js');
 
 module.exports = {
-    // Request constructor
+    /**
+     * Sends Ajax request and returns Ajax response
+     * @param {string} url 
+     * @param {function} callbackForAsynchronousRequest - successful callback
+     * @param {function} failureCallbackForAsynchronousRequest - failure callback
+     * @param {number} progressiveRequestQuantBytes - quantity of bytes in progressive response
+     */
     request: function request(
         url,
         callbackForAsynchronousRequest,
@@ -11,10 +17,10 @@ module.exports = {
         progressiveRequestQuantBytes) {
         
         var ajaxResponse = new XMLHttpRequest(); // Create XMLHttp request
-        var isSynchronous = callbackForAsynchronousRequest === undefined;
+        var isSynchronous = callbackForAsynchronousRequest === undefined; // Is synchronous
 
-        var isFinishedRequest = false;
-        var bytesRecievedOnLastQuant = 0;
+        var isFinishedRequest = false; // Is the request finished?
+        var bytesRecievedOnLastQuant = 0; // Bytes received on last quant??
         
         function internalAjaxCallback(e) {
             if (isFinishedRequest) {

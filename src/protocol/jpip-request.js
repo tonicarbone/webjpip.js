@@ -2,6 +2,15 @@
 
 var jGlobals = require('j2k-jpip-globals.js');
 
+/**
+ * Jpip request object
+ * @param {sessionHelperObject} sessionHelper 
+ * @param {messageHeaderParserObject} messageHeaderParser 
+ * @param {channelObject} channel 
+ * @param {string} requestUrl 
+ * @param {function} callback 
+ * @param {function} failureCallback 
+ */
 module.exports = function JpipRequest(
     sessionHelper,
     messageHeaderParser,
@@ -18,12 +27,14 @@ module.exports = function JpipRequest(
     var RESPONSE_ENDED_SENT_ANOTHER_MESSAGE = 3;
     
     var self = this;
-    var isActive = false;
-    var endedByUser = false;
-    var lastRequestId;
-    var responseLength = PROGRESSIVENESS_MIN_LENGTH_BYTES;
+    var isActive = false; // Is this request active?
+    var endedByUser = false; // ??
+    var lastRequestId; // Last sent request ID
+    var responseLength = PROGRESSIVENESS_MIN_LENGTH_BYTES; // Min response length
     
+    // Start request
     this.startRequest = function startRequest() {
+        // Check if request is already active or has already stopped
         if (isActive) {
             throw new jGlobals.jpipExceptions.InternalErrorException(
                 'startRequest called twice');
@@ -32,16 +43,18 @@ module.exports = function JpipRequest(
                 'request was already stopped');
         }
         
-        isActive = true;
-        sessionHelper.requestStarted();
+        isActive = true; // Request is now active
+        sessionHelper.requestStarted(); // Increment sessionHelper.activeRequests
         
-        sendMessageOfDataRequest();
+        sendMessageOfDataRequest(); // Send message
     };
 
+    // Stop request
     this.stopRequestAsync = function stopRequestAsync(request) {
         endedByUser = true;
     };
     
+    // Get last request ID
     this.getLastRequestId = function getLastRequestId() {
         if (!isActive) {
             throw new jGlobals.jpipExceptions.InternalErrorException(
@@ -51,12 +64,14 @@ module.exports = function JpipRequest(
         return lastRequestId;
     };
     
+    // ??
     this.callCallbackAfterConcurrentRequestsFinished =
         function callCallbackAfterConcurrentRequestsFinished() {
         
         callback(self, /*isResponseDone=*/true);
     };
     
+    // Success callback
     function internalSuccessCallback(ajaxResponse, isResponseDone) {
         var failed = false;
 
@@ -89,7 +104,8 @@ module.exports = function JpipRequest(
             sessionHelper.onException(e);
         }
     }
-    
+
+    // Failure callback
     function internalFailureCallback(ajaxResponse) {
         channel.requestEnded(ajaxResponse, self);
         sessionHelper.checkConcurrentRequestsFinished();
@@ -99,6 +115,7 @@ module.exports = function JpipRequest(
         }
     }
     
+    // Process the Ajax response
     function processAjaxResponse(ajaxResponse, isResponseDone) {
         if (!isResponseDone) {
             throw new jGlobals.jpipExceptions.InternalErrorException('AJAX ' +
@@ -133,15 +150,19 @@ module.exports = function JpipRequest(
         return endedReason;
     }
     
+    // Send Ajax response with URL
     function sendMessageOfDataRequest() {
-        lastRequestId = channel.nextRequestId();
+        lastRequestId = channel.nextRequestId(); // ??
         
+        // Create request URL
         var url = requestUrl +
             '&len=' + responseLength +
             '&qid=' + lastRequestId;
         
-        responseLength *= 2;
+        responseLength *= 2; // Extend response length??
         
+        // Create channel if no current channel ID
+        // If firstChannel exists, use that
         var shouldCreateChannel = channel.getChannelId() === null;
         if (shouldCreateChannel) {
             url += '&cnew=http';
@@ -157,16 +178,24 @@ module.exports = function JpipRequest(
             url += '&cid=' + channel.getChannelId();
         }
         
+        // Send Ajax request
         sessionHelper.sendAjax(
             url,
             internalSuccessCallback,
             internalFailureCallback);
     }
     
+    /**
+     * Parse end of response
+     * @param {ajaxResponse} ajaxResponse 
+     * @param {number} offset - offset of characters in URL
+     * @returns {number} - EoR result (defualt either RESPONSE_ENDED_ABORTED or RESPONSE_ENDED_SUCCESS)
+     */
     function parseEndOfResponse(ajaxResponse, offset) {
         var endResponseResult = RESPONSE_ENDED_ABORTED;
         var bytes = new Uint8Array(ajaxResponse.response);
         
+        // Throw exception if EoR is not found
         if (offset > bytes.length - 2 ||
             bytes[offset] !== 0) {
             
@@ -174,6 +203,7 @@ module.exports = function JpipRequest(
                 'End Of Response (EOR) code at the end of response', 'D.3');
         }
         
+        // Throw exceptions for ending reasons
         switch (bytes[offset + 1]) {
             case jGlobals.jpipEndOfResponseReasons.IMAGE_DONE:
             case jGlobals.jpipEndOfResponseReasons.WINDOW_DONE:
@@ -224,6 +254,7 @@ module.exports = function JpipRequest(
         return endResponseResult;
     }
     
+    // ??
     function saveToDatabinsFromOffset(ajaxResponse) {
         try {
             var bytes = new Uint8Array(ajaxResponse.response);

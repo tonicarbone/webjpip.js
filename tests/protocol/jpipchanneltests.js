@@ -4,6 +4,12 @@ function clearForChannelTest() {
     mockFactoryForProtocolTest.clearForTest();
 }
 
+/**
+ * Create channel
+ * @param {object} options - properties of url, targetId,
+ * maxRequestsWaitingForResponseInChannel, levelSizes
+ * @returns {channelObject}
+ */
 function createChannel(options) {
     options = options || {};
 
@@ -31,6 +37,10 @@ function createChannel(options) {
         };
 }
 
+/**
+ * 
+ * @param {channel} createdChannel 
+ */
 function requestData(createdChannel) {
     var request = new JpipRequestMock();
     
@@ -47,9 +57,18 @@ function requestData(createdChannel) {
     return request;
 }
 
+/**
+ * 
+ * @param {string} testName - name of the test for QUnit
+ * @param {*} numQualityLayers - number of quality layers
+ * @param {number} targetId - target ID
+ * @param {string} urlSuffix - URL suffix
+ * @param {*} operationBefore - Prior operation performed
+ */
 function testUrl(
     testName, numQualityLayers, targetId, urlSuffix, operationBefore) {
     
+    // QUnit test
     QUnit.test(testName, function(assert) {
         clearForChannelTest();
         
@@ -58,20 +77,24 @@ function testUrl(
         mockFactoryForProtocolTest.resultByFunctionForTest['createRequest'] =
             dummyRequest;
             
+        // Base URL
         var baseUrl = 'http://dummy.base.url.com/path?dummyKey=dummyValue';
         
+        // Size parameters
         var levelWidth = 63;
         var levelHeight = 41;
         var level = 2;
         var levelSizes = [];
         levelSizes[level] = [levelWidth, levelHeight];
         
+        // Create channel
         var created = createChannel({
             url: baseUrl,
             levelSizes: levelSizes,
             targetId: targetId || '0'
             });
         
+        // Codestream part parameters
         var minX = 15;
         var minY = 92;
         var width = 53;
@@ -83,6 +106,8 @@ function testUrl(
             maxYExclusive: minY + height,
             level: level
             };
+            
+        // Callbacks
         var dummyCallback = 'dummy callback';
         var dummyFailureCallback = 'dummy failure callback';
         
@@ -92,6 +117,7 @@ function testUrl(
             operationBefore(created.channel);
         }
         
+        // Request data
         created.channel.requestData(
             codestreamPartParams,
             dummyCallback,
@@ -99,7 +125,7 @@ function testUrl(
             numQualityLayers);
         
         // Assert
-        
+        // Expected URL
         var urlExpected = baseUrl +
             '&fsiz=' + levelWidth + ',' + levelHeight + ',closest' +
             '&rsiz=' + width + ',' + height +
@@ -117,6 +143,7 @@ function testUrl(
             urlExpected);
         var parsedUrlActual = ajaxHelperMock.getRequestFromUrlForTest(
             urlActual);
+        // Assert URL equality
         assert.deepEqual(
             parsedUrlActual, parsedUrlExpected, 'Correctness of url argument');
         
@@ -124,24 +151,36 @@ function testUrl(
     });
 }
 
+/**
+ * Test minimal request URL creation
+ * @param {string} testName - name of the test for QUnit
+ * @param {number} targetId 
+ * @param {string} urlSuffix 
+ * @param {*} operationBefore 
+ */
 function testMinimalRequestUrl(
     testName, targetId, urlSuffix, operationBefore) {
     
+    // QUnit test
     QUnit.test(testName, function(assert) {
         clearForChannelTest();
         
+        // Create empty dummy request
         var dummyRequest = new JpipRequestMock();
         
         mockFactoryForProtocolTest.resultByFunctionForTest['createRequest'] =
             dummyRequest;
             
+        // Base URL
         var baseUrl = 'http://dummy.base.url.com/path?dummyKey=dummyValue';
         
+        // Create channel
         var created = createChannel({
             url: baseUrl,
             targetId: targetId || '0'
             });
             
+        // Callback
         var dummyCallback = 'dummy callback';
         
         // Act
@@ -150,6 +189,7 @@ function testMinimalRequestUrl(
             operationBefore(created.channel);
         }
         
+        // Send minimal request
         created.channel.sendMinimalRequest(dummyCallback);
         
         // Assert

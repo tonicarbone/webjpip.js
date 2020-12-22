@@ -3,14 +3,14 @@
 var jGlobals = require('j2k-jpip-globals.js');
 
 /**
- * 
+ * Creates JpipSession object
  * @param {number} maxChannelsInSession - max permissible channels in session
  * @param {number} maxRequestsWaitingForResponseInChannel - max requests waiting for response in channel
- * @param {*} knownTargetId 
- * @param {*} codestreamStructure 
- * @param {*} databinsSaver 
- * @param {*} setIntervalFunction 
- * @param {*} clearIntervalFunction 
+ * @param {number} knownTargetId 
+ * @param {object} codestreamStructure 
+ * @param {object} databinsSaver 
+ * @param {function?} setIntervalFunction 
+ * @param {function?} clearIntervalFunction 
  * @param {object} jpipFactory - jpipRuntimeFactory object
  */
 module.exports = function JpipSession(
@@ -32,12 +32,11 @@ module.exports = function JpipSession(
     var dataRequestUrl; // Specific data request URL
     var closeSessionUrl; // URL to close session
     
-    // ??
-    var isCloseCalled = false;
-    var closeCallbackPending = null;
+    // Close
+    var isCloseCalled = false; // Is close() called
+    var closeCallbackPending = null; // Is close() callback pending??
 
-    // ??
-    var sessionHelper = null;
+    var sessionHelper = null; // jpip-session-helper.js
     var statusCallback = null;
     var requestEndedCallback = null;
 
@@ -72,19 +71,18 @@ module.exports = function JpipSession(
         sessionHelper = jpipFactory.createSessionHelper(
             dataRequestUrl, knownTargetId, codestreamStructure, databinsSaver);
         
-        // If theres a status callback, set status callback??
+        // Set callback
         if (statusCallback !== null) {
             sessionHelper.setStatusCallback(statusCallback);
         }
         
-        // If theres a request ended callback, set request ended callback??
         if (requestEndedCallback !== null) {
             sessionHelper.setRequestEndedCallback(requestEndedCallback);
         }
         
-        var channel = createChannel(); // Create channel
+        var channel = createChannel();
         
-        channel.sendMinimalRequest(sessionReadyCallback); // 
+        channel.sendMinimalRequest(sessionReadyCallback); // Send minimal request
     };
     
     this.getTargetId = function getTargetId() {
