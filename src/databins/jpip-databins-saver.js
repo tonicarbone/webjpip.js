@@ -3,13 +3,14 @@
 var jGlobals = require('j2k-jpip-globals.js');
 
 module.exports = function JpipDatabinsSaver(isJpipTilePartStream, jpipFactory) {
+    // Databin class constants
     var PRECINCT_NO_AUX_CLASS = 0;
     var PRECINCT_WITH_AUX_CLASS = 1;
     var TILE_HEADER_CLASS = 2;
     var TILE_NO_AUX_CLASS = 4;
     var TILE_WITH_AUX_CLASS = 5;
 
-    var databinsByClass = [];
+    var databinsByClass = []; // Databins by class
     var forbiddenInJpp = [];
     var forbiddenInJpt = [];
     
@@ -36,7 +37,7 @@ module.exports = function JpipDatabinsSaver(isJpipTilePartStream, jpipFactory) {
     forbiddenInJpp[TILE_NO_AUX_CLASS] = true;
     forbiddenInJpp[TILE_WITH_AUX_CLASS] = true;
     
-    var mainHeaderDatabin = jpipFactory.createDatabinParts(6, 0);
+    var mainHeaderDatabin = jpipFactory.createDatabinParts(6, 0); // Main header databin
     
     this.getIsJpipTilePartStream = function() {
         return isJpipTilePartStream;
@@ -266,6 +267,7 @@ module.exports = function JpipDatabinsSaver(isJpipTilePartStream, jpipFactory) {
         return databin;
     }
     
+    // Returns {databins: [], listeners: [], databinsWithListeners: []}
     function createDatabinsArray() {
         return {
             databins: [],

@@ -2,16 +2,23 @@
 
 // A.2.1.
 
+/**
+ * Functions to help with checking and adding data to databins
+ * @param {number} classId - type of databin it is (what number?)
+ * @param {number} inClassId - type of databin...?
+ * @param {object} jpipFactory
+ * @returns {object}
+ */
 module.exports = function JpipDatabinParts(
     classId, inClassId, jpipFactory) {
 
     var self = this;
 
-    var parts = [];
-    var databinLengthIfKnown = null;
-    var loadedBytes = 0;
+    var parts = []; // ??
+    var databinLengthIfKnown = null; // Length of databin
+    var loadedBytes = 0; // Loaded bytes
     
-    var cachedData = [];
+    var cachedData = []; // What data is cached
     
     this.getDatabinLengthIfKnown = function() {
         return databinLengthIfKnown;
@@ -21,6 +28,7 @@ module.exports = function JpipDatabinParts(
         return loadedBytes;
     };
     
+    // Returns true if all databins are loaded - to what though??
     this.isAllDatabinLoaded = function isAllDatabinLoaded() {
         var result;
         
@@ -43,6 +51,7 @@ module.exports = function JpipDatabinParts(
         return result;
     };
     
+    // Return cached data as object
     this.getCachedData = function getCachedData(key) {
         var obj = cachedData[key];
         if (obj === undefined) {
@@ -122,6 +131,7 @@ module.exports = function JpipDatabinParts(
         return result;
     };
     
+    // Add data to databin
     this.addData = function(header, message) {
         if (header.isLastByteInDatabin) {
             databinLengthIfKnown = header.messageOffsetFromDatabinStart + header.messageBodyLength;
