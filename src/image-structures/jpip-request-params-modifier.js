@@ -10,7 +10,13 @@ function JpipRequestParamsModifier(codestreamStructure) {
         return codestreamPartParamsModified;
     };
 
+    /**
+     * Validate and fill out progressiveness.
+     * @param {Progressiveness} progressiveness - Defaults progressiveness[].forceMaxQuality to 'no', it cannot be 'forceAll'. 
+     * @returns {Progressiveness}
+     */
     this.modifyCustomProgressiveness = function modifyCustomProgressiveness(progressiveness) {
+        // Check valid argument
         if (!progressiveness || !progressiveness.length) {
             throw new jGlobals.jpipExceptions.ArgumentException(
                 'progressiveness',
@@ -22,6 +28,7 @@ function JpipRequestParamsModifier(codestreamStructure) {
         
         var result = new Array(progressiveness.length);
 
+        // Ensure minNumQualityLayers is given for all items in progressiveness array
         for (var i = 0; i < progressiveness.length; ++i) {
             var minNumQualityLayers = progressiveness[i].minNumQualityLayers;
             
@@ -31,6 +38,9 @@ function JpipRequestParamsModifier(codestreamStructure) {
                     'progressiveness[' + i + '].minNumQualityLayers');
             }
             
+            // forceMaxQuality for a given progressiveness level must be
+            // either 'no' or 'force', it cannot be 'forceAll'
+            // it defaults to 'no'
             var forceMaxQuality = 'no';
             if (progressiveness[i].forceMaxQuality) {
                 forceMaxQuality = progressiveness[i].forceMaxQuality;
@@ -60,14 +70,20 @@ function JpipRequestParamsModifier(codestreamStructure) {
         return result;
     };
 
+    /**
+     * @param {number} [maxQuality] Max quality to progressive up to.
+     * @returns {Progressiveness} Progressiveness of [1, 2, 3, maxQuality/2, maxQuality].
+     */
     this.getAutomaticProgressiveness = function getAutomaticProgressiveness(maxQuality) {
         // Create progressiveness of (1, 2, 3, (#max-quality/2), (#max-quality))
 
         var progressiveness = [];
 
         // No progressiveness, wait for all quality layers to be fetched
+        // Max quality must be the smaller of the users input maxQuality
+        // or the number of quality layers of the image itself
         var tileStructure = codestreamStructure.getDefaultTileStructure();
-        var numQualityLayersNumeric = tileStructure.getNumQualityLayers();
+        var numQualityLayersNumeric = tileStructure.getNumQualityLayers(); // Images number of quality layers
         var qualityNumericOrMax = 'max';
         
         if (maxQuality !== undefined && maxQuality !== 'max') {
@@ -76,6 +92,7 @@ function JpipRequestParamsModifier(codestreamStructure) {
             qualityNumericOrMax = numQualityLayersNumeric;
         }
         
+        // Logic to get [1, 2, 3, maxQuality/2, maxQuality] progressiveness
         var firstQualityLayersCount = numQualityLayersNumeric < 4 ?
             numQualityLayersNumeric - 1: 3;
         
@@ -144,9 +161,17 @@ function JpipRequestParamsModifier(codestreamStructure) {
         return result;
     }
 
+    /**
+     * Validate a given numeric parameter.
+     * @param {number} inputValue - input given
+     * @param {number} propertyName - name of property
+     * @param {number} defaultValue - default value
+     * @param {number} allowUndefined - is to be allowed undefined
+     */
     function validateNumericParam(
         inputValue, propertyName, defaultValue, allowUndefined) {
         
+        // If allowed undefined, return default (defined) value
         if (inputValue === undefined &&
             (defaultValue !== undefined || allowUndefined)) {
             

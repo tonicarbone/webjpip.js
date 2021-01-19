@@ -5,11 +5,51 @@ var jGlobals = require('j2k-jpip-globals.js');
 
 module.exports = JpipImage;
 
+// Type of worker??
 var WORKER_TYPE_PIXELS = 1;
 var WORKER_TYPE_COEFFS = 2;
 
-var TASK_ABORTED_RESULT_PLACEHOLDER = 'aborted';
+var TASK_ABORTED_RESULT_PLACEHOLDER = 'aborted'; // Redundant?
 
+///////////////////////////////
+/* ANTHONY'S JSDOC TYPEDEF'S */
+
+/**
+ * @typedef {Object[]} Progressiveness
+ * @property {number} minNumQualityLayers - The number of quality layers.
+ * @property {'no' | 'force' | 'forceAll'} [forceMaxQuality='no'] -
+ * Force delivering image at given quality level while later levels are still being worked on.
+ */
+
+/**
+ * @typedef {Object} FetcherOptionsArg Options to be supplied to the fetcher.
+ * @property {string} url
+ */
+
+/**
+ * @typedef {Object} JpipObjects
+ * @property {Object} Reconstructor
+ * @property {Object} Reconstructor
+ * @property {Object} PacketsDataCollector
+ * @property {Object} QualityLayersCache
+ * @property {Object} CodestreamStructure
+ * @property {Object} DatabinsSaver
+ * @property {Object} ParamsModifier
+ * @property {Object} FetcherSharedObjects
+ * @property {Object} FetcherOptions
+ * @property {Object} JpipFactory
+ */
+
+///////////////////////////////
+
+/**
+ * ??
+ * @param {JpipObjects | FetcherOptionsArg} arg - If first instance simply fetcher options which MUST have a URL, otherwise an already created JpipObjects.
+ * @param {Object[]} progressiveness
+ * @param {number} progressiveness.minNumQualityLayers - The number of quality layers.
+ * @param {'no' | 'force' | 'forceAll'} [progressiveness.forceMaxQuality='no'] -
+ * Force delivering image at given quality level while later levels are still being worked on.
+ */
 function JpipImage(arg, progressiveness) {
     var jpipObjects;
     if (arg && arg.jpipFactory) {
@@ -22,10 +62,10 @@ function JpipImage(arg, progressiveness) {
         jpipObjects = createJpipObjects(/*fetcherOptionsArg=*/arg);
     }
     
-    var progressivenessModified;
+    var progressivenessModified; // Validated and complete progressiveness
 
-    var imageParams = null;
-    var levelCalculator = null;
+    var imageParams = null; // ??
+    var levelCalculator = null; // ??
     
     // NOTE: Proxying fetcher to web worker might boost performance
     var fetcher = jpipFactory.createFetcher(
@@ -33,6 +73,11 @@ function JpipImage(arg, progressiveness) {
         jpipObjects.fetcherSharedObjects,
         jpipObjects.fetcherOptions);
     
+    /**
+     * Returns a non-progressive instance of JpipImage for a given quality.
+     * @param {integer | 'max'} [quality='max']
+     * @returns {JpipImage}
+     */
     this.nonProgressive = function nonProgressive(quality) {
         var qualityModified = quality || 'max';
         return this.customProgressive([ {
@@ -41,11 +86,21 @@ function JpipImage(arg, progressiveness) {
         } ]);
     };
     
+    /**
+     * Returns instance of JpipImage with progressiveness [1, 2, 3, maxQuality/2, maxQuality].
+     * @param {number} maxQuality
+     * @returns {JpipImage}
+     */
     this.autoProgressive = function autoProgressive(maxQuality) {
         var autoProgressiveness = this.getAutomaticProgressiveness(maxQuality);
         return this.customProgressive(autoProgressiveness);
     };
     
+    /**
+     * Return new JpipImage with custom progressiveness
+     * @param {*} customProgressiveness
+     * @returns {JpipImage}
+     */
     this.customProgressive = function customProgressive(customProgressiveness) {
         var customProgressivenessModified = jpipObjects.paramsModifier.modifyCustomProgressiveness(customProgressiveness);
         return new JpipImage(jpipObjects, customProgressivenessModified);
