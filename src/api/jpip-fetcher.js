@@ -6,6 +6,13 @@ module.exports = JpipFetcher;
 
 /* global console: false */
 
+/**
+ * 
+ * @param {DatabinsSaver} databinsSaver 
+ * @param {FetcherSharedObjects} fetcherSharedObjects 
+ * @param {FetcherOptions} options 
+ * @param {*} jpipFactory 
+ */
 function JpipFetcher(databinsSaver, fetcherSharedObjects, options, jpipFactory) {
     options = options || {};
 

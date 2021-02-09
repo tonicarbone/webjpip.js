@@ -40,7 +40,6 @@ function getConfiguration(env) {
                 path.resolve(__dirname, 'src', 'protocol'),
                 path.resolve(__dirname, 'src', 'quality-layers'),
                 path.resolve(__dirname, 'src', 'writers'),
-                path.resolve(__dirname, 'src'), // Demo
                 path.resolve(__dirname, 'node_modules'),
             ]
         },
@@ -57,6 +56,7 @@ function getConfiguration(env) {
                 loader: 'babel-loader',
                 options: { presets: ['es2015'] }
             }
-        ] }
+        ] },
+        devtool: "inline-source-map"
     };
 }

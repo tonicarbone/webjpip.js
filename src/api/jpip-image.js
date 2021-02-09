@@ -22,13 +22,12 @@ var TASK_ABORTED_RESULT_PLACEHOLDER = 'aborted'; // Redundant?
  */
 
 /**
- * @typedef {Object} FetcherOptionsArg Options to be supplied to the fetcher.
+ * @typedef {Object} FetcherOptions Options to be supplied to the fetcher.
  * @property {string} url
  */
 
 /**
  * @typedef {Object} JpipObjects
- * @property {Object} Reconstructor
  * @property {Object} Reconstructor
  * @property {Object} PacketsDataCollector
  * @property {Object} QualityLayersCache
@@ -36,7 +35,7 @@ var TASK_ABORTED_RESULT_PLACEHOLDER = 'aborted'; // Redundant?
  * @property {Object} DatabinsSaver
  * @property {Object} ParamsModifier
  * @property {Object} FetcherSharedObjects
- * @property {Object} FetcherOptions
+ * @property {FetcherOptions} FetcherOptions
  * @property {Object} JpipFactory
  */
 
@@ -44,13 +43,15 @@ var TASK_ABORTED_RESULT_PLACEHOLDER = 'aborted'; // Redundant?
 
 /**
  * ??
- * @param {JpipObjects | FetcherOptionsArg} arg - If first instance simply fetcher options which MUST have a URL, otherwise an already created JpipObjects.
+ * @param {JpipObjects | FetcherOptions} arg - If first instance simply fetcher options which MUST have a URL, otherwise an already created JpipObjects.
  * @param {Object[]} progressiveness
  * @param {number} progressiveness.minNumQualityLayers - The number of quality layers.
  * @param {'no' | 'force' | 'forceAll'} [progressiveness.forceMaxQuality='no'] -
  * Force delivering image at given quality level while later levels are still being worked on.
  */
 function JpipImage(arg, progressiveness) {
+    
+    // Validate arguments
     var jpipObjects;
     if (arg && arg.jpipFactory) {
         jpipObjects = arg;
@@ -75,7 +76,7 @@ function JpipImage(arg, progressiveness) {
     
     /**
      * Returns a non-progressive instance of JpipImage for a given quality.
-     * @param {integer | 'max'} [quality='max']
+     * @param {integer | 'max'} [quality='max'] Amount of quality layers of final image delivered.
      * @returns {JpipImage}
      */
     this.nonProgressive = function nonProgressive(quality) {
@@ -97,8 +98,8 @@ function JpipImage(arg, progressiveness) {
     };
     
     /**
-     * Return new JpipImage with custom progressiveness
-     * @param {*} customProgressiveness
+     * Return new JpipImage with custom progressiveness.
+     * @param {Progressiveness} customProgressiveness
      * @returns {JpipImage}
      */
     this.customProgressive = function customProgressive(customProgressiveness) {
@@ -106,6 +107,10 @@ function JpipImage(arg, progressiveness) {
         return new JpipImage(jpipObjects, customProgressivenessModified);
     };
 
+    /**
+     * Used by IDF. Called after fetcher 
+     * @param {ImageDecoder} imageDecoder
+     */
     this.opened = function opened(imageDecoder) {
         imageParams = imageDecoder.getImageParams();
     };

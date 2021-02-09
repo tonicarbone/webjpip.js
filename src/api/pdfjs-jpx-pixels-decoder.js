@@ -149,16 +149,16 @@ PdfjsJpxPixelsDecoder.prototype._copyTile = function copyTile(
     // Perform offsets depending on number of components
     switch (componentsCount) {
         case 1:
-            gOffset = 0; // Greyscale?
+            gOffset = 0; // Greyscale
             bOffset = 0;
             break;
         
         case 3:
-            pixelsOffset = 3; // RGB?
+            pixelsOffset = 3; // RGB
             break;
             
         case 4:
-            pixelsOffset = 4; // RGBa?
+            pixelsOffset = 4; // RGBa
             break;
             
         default:
